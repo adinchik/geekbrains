@@ -38,4 +38,5 @@ public class HomeWorkLesson2 {
         printStrings("Adina", 5);
         System.out.println(isYearLeap(2000));
     }
+
 }
