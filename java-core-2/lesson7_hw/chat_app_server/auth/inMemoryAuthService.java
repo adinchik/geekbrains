@@ -1,5 +1,6 @@
 package ru.geekbrains.java_core2.chat_app_server.auth;
 
+import ru.geekbrains.java_core2.chat_app_server.error.BadRequestException;
 import ru.geekbrains.java_core2.chat_app_server.error.UserNotFoundException;
 import ru.geekbrains.java_core2.chat_app_server.error.WrongCredentialsException;
 
@@ -36,7 +37,7 @@ public class inMemoryAuthService implements AuthService{
             if (login.equals(user.getLogin())) {
                 if (password.equals(user.getPassword())) {
                     return user.getNickname();
-                } else throw new WrongCredentialsException("");
+                } else throw new WrongCredentialsException("Wrong Credentials");
             }
         }
         throw new UserNotFoundException("User not found");
@@ -44,18 +45,33 @@ public class inMemoryAuthService implements AuthService{
     }
 
     @Override
-    public String changeNickname(String oldNick, String newNick) {
-        return null;
+    public void changeNickname(String oldNick, String newNick) {
+        for (User user: users) {
+            if (user.getNickname() == oldNick) {
+                user.setNickname(newNick);
+            }
+        }
     }
 
     @Override
-    public void changePassword(String nickname, String oldPassword, String newPassword) {
-
+    public void changePassword(String nickname, String oldPassword, String newPassword) throws WrongCredentialsException {
+        for (User user: users) {
+            if (user.getNickname().equals(nickname)) {
+                if (user.getPassword().equals(oldPassword)) {
+                    user.setPassword(newPassword);
+                } else throw new WrongCredentialsException("");
+            }
+        }
     }
 
     @Override
-    public void createNewUser(String login, String password, String nickname) {
-
+    public void createNewUser(String login, String password, String nickname) throws WrongCredentialsException{
+        for (User user: users) {
+            if (user.getNickname().equals(nickname) || user.getLogin().equals(login)) {
+                throw new WrongCredentialsException("");
+            }
+        }
+        users.add(new User(login, password, nickname));
     }
 
     @Override

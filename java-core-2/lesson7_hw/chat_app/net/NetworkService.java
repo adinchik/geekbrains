@@ -24,37 +24,19 @@ public class NetworkService {
     }
 
     public void readMessages() {
-//        Thread t = new Thread(()->{
-//            while (!Thread.currentThread().isInterrupted()) {
-//                try {
-//                    String message = in.readUTF();
-//                    System.out.println(message);
-//                    chatMessageService.receive(message);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
-//        t.setDaemon(true);
-//        t.start();
-
-        Runnable task = () -> {
-            Platform.runLater(() -> {
-                while (!Thread.currentThread().isInterrupted()) {
-                    try {
-                        String message = in.readUTF();
-                        System.out.println(message);
-                        chatMessageService.receive(message);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+        Thread t = new Thread(()->{
+            while (!Thread.currentThread().isInterrupted()) {
+                try {
+                    String message = in.readUTF();
+                    System.out.println(message);
+                    chatMessageService.receive(message);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                System.out.println("I'm running later...");
-            });
-        };
-        Thread thread = new Thread(task);
-        thread.setDaemon(true);
-        thread.start();
+            }
+        });
+        t.setDaemon(true);
+        t.start();
     }
 
     public void sendMessage(String message) {

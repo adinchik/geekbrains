@@ -38,25 +38,29 @@ public class MainChatController implements Initializable, MessageProcessor {
     public void sendMessage(ActionEvent actionEvent) {
         String text = inputField.getText();
         if (text.isEmpty()) return;
-       // if (contactList.getSelectionModel().isEmpty())
+       if (!contactList.getSelectionModel().isEmpty()) {
+           text = "/w " + contactList.getSelectionModel().getSelectedItem() + " " + text;
+           contactList.getSelectionModel().clearSelection();
+       }
        //     text = "ME: " + text;
        // else
        //     text = contactList.getSelectionModel().getSelectedItem() + ": " + text;
        // mainChatArea.appendText(text + "\n");
-        chatMessageService.send(this.nickname + ": " + text + "\n");
+        chatMessageService.send(this.nickname + ": " + text);
         inputField.clear();
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        ObservableList<String>  list = FXCollections.observableArrayList("Adina", "Madina", "Timur", "Insar", "Temirlan");
-        contactList.setItems(list);
+//        ObservableList<String>  list = FXCollections.observableArrayList("Adina", "Madina", "Timur", "Insar", "Temirlan");
+//        contactList.setItems(list);
         this.chatMessageService = new ChatMessageService(this);
     }
 
     @Override
     public void processMessage(String message) {
-        parseMessage(message);
+
+        Platform.runLater(() -> parseMessage(message));
     }
 
     public void sendAuth() {
@@ -73,15 +77,33 @@ public class MainChatController implements Initializable, MessageProcessor {
             MainChatPanel.setVisible(true);
         } else if (message.startsWith("ERROR: ")) {
             showError(message);
-        } else {
-            mainChatArea.appendText(message);
+        } else if (message.startsWith("$.list: ")) {
+            ObservableList<String>  list = FXCollections.observableArrayList(message.substring(8).split("\\s"));
+            contactList.setItems(list);
+        }
+        else if (message.startsWith("/changeNick ")) {
+            this.nickname = message.substring(12);
+        }
+        else {
+            mainChatArea.appendText(message + System.lineSeparator());
         }
     }
 
     private void showError(String message) {
-        Alert alert;
-        alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("ERROR");
+//        Runnable task = () -> {
+//           Platform.runLater(() -> {
+//               Alert alert;
+//               alert = new Alert(Alert.AlertType.ERROR);
+//               alert.setHeaderText(message);
+//               alert.showAndWait();
+//               System.out.println("I'm running later...");
+//            });
+//        };
+//        Thread thread = new Thread(task);
+//        thread.setDaemon(true);
+//        thread.start();
+
+        Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setHeaderText(message);
         alert.showAndWait();
     }
