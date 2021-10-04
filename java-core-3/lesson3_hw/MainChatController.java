@@ -135,8 +135,10 @@ public class MainChatController implements Initializable, MessageProcessor {
         String path = "saved_messages/" + this.nickname;
         try (BufferedReader br = new BufferedReader(new FileReader(path))) {
             String line;
-            while ((line = br.readLine()) != null) {
+            int count = 0;
+            while ((line = br.readLine()) != null && count < 100) {
                 mainChatArea.appendText(line + System.lineSeparator());
+                count++;
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
