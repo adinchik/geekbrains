@@ -12,9 +12,10 @@ public class MainClass {
     public static CyclicBarrier barrier = new CyclicBarrier(CARS_COUNT + 1);
     public static Semaphore semaphore = new Semaphore(CARS_COUNT / 2, true);
     public static CountDownLatch cdl = new CountDownLatch(CARS_COUNT);
-    public static String winner = "";
 
     public static void main(String[] args) {
+
+
         System.out.println("ВАЖНОЕ ОБЪЯВЛЕНИЕ >>> Подготовка!!!");
         Race race = new Race(new Road(60), new Tunnel(), new Road(40));
         Car[] cars = new Car[CARS_COUNT];

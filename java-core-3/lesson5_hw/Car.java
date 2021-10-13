@@ -7,6 +7,9 @@ public class Car implements Runnable {
     private Race race;
     private int speed;
     private String name;
+    private static String winner = "";
+    private static Object mon = new Object();
+
     public String getName() {
         return name;
     }
@@ -33,9 +36,12 @@ public class Car implements Runnable {
         for (int i = 0; i < race.getStages().size(); i++) {
             race.getStages().get(i).go(this);
         }
-        if (MainClass.winner.isEmpty()) {
-            MainClass.winner = this.name;
-            System.out.println(MainClass.winner + " - WIN");
+
+        synchronized (mon) {
+            if (winner.isEmpty()) {
+                winner = this.name;
+                System.out.println(winner + " - WIN");
+            }
         }
         MainClass.cdl.countDown();
     }
