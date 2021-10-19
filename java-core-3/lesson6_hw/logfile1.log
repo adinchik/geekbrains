@@ -1,0 +1,21 @@
+INFO  2021-10-13 14:20:19 [main] chat_app_server.auth.inMemoryAuthService (inMemoryAuthService.java:73) - Auth server started
+INFO  2021-10-13 14:20:19 [main] chat_app_server.Server (Server.java:39) - Server start
+INFO  2021-10-13 14:20:35 [pool-2-thread-1] chat_app_server.Server (Server.java:46) - Client connected
+INFO  2021-10-13 14:20:35 [Thread-0] chat_app_server.auth.inMemoryAuthService (inMemoryAuthService.java:73) - Auth server started
+INFO  2021-10-13 14:20:35 [Thread-0] chat_app_server.Handler (Handler.java:155) - Send message to clientERROR:%&%Wrong Credentials
+ERROR 2021-10-13 14:20:35 [Thread-0] chat_app_server.Handler (Handler.java:147) - Throwing
+chat_app_server.error.WrongCredentialsException: Wrong Credentials
+	at chat_app_server.auth.inMemoryAuthService.getNicknameByLoginAndPassword(inMemoryAuthService.java:116) ~[classes/:?]
+	at chat_app_server.Handler.handleMessage(Handler.java:130) ~[classes/:?]
+	at chat_app_server.Handler.authorized(Handler.java:76) ~[classes/:?]
+	at chat_app_server.Handler.lambda$handle$0(Handler.java:36) ~[classes/:?]
+	at java.lang.Thread.run(Thread.java:831) [?:?]
+ERROR 2021-10-13 14:20:37 [Thread-0] chat_app_server.Handler (Handler.java:81) - Client not connected in 2 sec
+INFO  2021-10-13 14:20:37 [Thread-0] chat_app_server.Handler (Handler.java:155) - Send message to clientERROR:%&%Client not connect in 2 sec
+INFO  2021-10-13 14:20:37 [Thread-0] chat_app_server.Handler (Handler.java:39) - Client authorized
+INFO  2021-10-13 14:20:45 [pool-3-thread-1] chat_app_server.Server (Server.java:46) - Client connected
+INFO  2021-10-13 14:20:45 [Thread-1] chat_app_server.auth.inMemoryAuthService (inMemoryAuthService.java:73) - Auth server started
+INFO  2021-10-13 14:20:45 [Thread-1] chat_app_server.Handler (Handler.java:155) - Send message to client/list:%&%nick1%&%
+INFO  2021-10-13 14:20:45 [Thread-1] chat_app_server.Handler (Handler.java:155) - Send message to client/authok:%&%nick1
+INFO  2021-10-13 14:20:45 [Thread-1] chat_app_server.Handler (Handler.java:137) - User authorized
+INFO  2021-10-13 14:20:45 [Thread-1] chat_app_server.Handler (Handler.java:39) - Client authorized
