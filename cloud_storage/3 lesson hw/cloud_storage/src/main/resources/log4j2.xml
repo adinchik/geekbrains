@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <Configuration xmlns="http://logging.apache.org/log4j/2.0/config">
-    <Properties>
-        <Property name="basePath">online_chat_server/logs</Property>
-    </Properties>
 
     <Appenders>
         <Console name="STDOUT" target="SYSTEM_OUT">
@@ -14,7 +11,6 @@
 
     <Loggers>
         <Root level="trace">
-            <AppenderRef ref="FILE1"/>
             <AppenderRef ref="STDOUT" />
         </Root>
         <!--<Logger name="ru.geekbrains.java3.lessons.lesson6_log_test.LoggingExample" level="info" additivity="false">

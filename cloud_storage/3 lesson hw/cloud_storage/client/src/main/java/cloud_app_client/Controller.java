@@ -27,8 +27,8 @@ public class Controller implements Initializable {
     private static final int BUFFER_SIZE = 8192;
     private byte[] buffer;
     public Socket socket;
-    public ObjectDecoderInputStream in;
     public ObjectEncoderOutputStream os;
+    public ObjectDecoderInputStream in;
     public ListView<String> clientFiles;
     public ListView<String> serverFiles;
     private Path baseDir;
@@ -73,6 +73,7 @@ public class Controller implements Initializable {
         t = new Thread(()-> {
             while (!Thread.currentThread().isInterrupted()) {
                 try {
+                    System.out.println("revived smth");
                     AbstractMessage msg = (AbstractMessage) in.readObject();
                     switch (msg.getMessageType()) {
                         case FILE:
@@ -93,6 +94,8 @@ public class Controller implements Initializable {
                 }
             }
         });
+        t.setDaemon(true);
+        t.start();
     }
 
     private void fillServerView(List<String> list) {
@@ -125,8 +128,8 @@ public class Controller implements Initializable {
             });
 
             socket = new Socket("localhost", 8089);
-            in = new ObjectDecoderInputStream(socket.getInputStream());
             os = new ObjectEncoderOutputStream(socket.getOutputStream());
+            in = new ObjectDecoderInputStream(socket.getInputStream());
             buffer = new byte[BUFFER_SIZE];
             readCommands();
         } catch (IOException e) {
