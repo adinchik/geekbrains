@@ -13,6 +13,7 @@ public class HandlerProvider {
 
     public HandlerProvider(UserNameService nameService,
                            ContextStoreService contextStoreService) {
+        System.out.println("!!!!");
         this.nameService = nameService;
         this.contextStoreService = contextStoreService;
     }
@@ -26,6 +27,7 @@ public class HandlerProvider {
     }
 
     public ChannelHandler[] getSerializePipeline() {
+        System.out.println("!!!!!");
         return new ChannelHandler[] {
                 new ObjectDecoder(ClassResolvers.cacheDisabled(null)),
                 new ObjectEncoder(),

@@ -15,13 +15,16 @@ import java.nio.file.Paths;
 public class AbstractMessageHandler extends SimpleChannelInboundHandler<AbstractMessage> {
     private Path currentPath;
 
-    public AbstractMessageHandler() {
-        currentPath = Paths.get("serverFiles");
+    public AbstractMessageHandler()
+    {
+        currentPath = Paths.get("storage");
+        System.out.println(currentPath.toString());
     }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         ctx.writeAndFlush(new FilesList(currentPath));
+        System.out.println("sended servel list of files");
     }
 
     @Override
