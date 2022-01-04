@@ -3,25 +3,17 @@ package cloud_app_client;
 import io.netty.handler.codec.serialization.ObjectDecoderInputStream;
 import io.netty.handler.codec.serialization.ObjectEncoderOutputStream;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleBooleanProperty;
-
-import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.TextAlignment;
 import model.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-
-
 
 import java.io.*;
 import java.net.Socket;
@@ -41,7 +33,7 @@ public class Controller implements Initializable {
     public TextField loginField;
     public PasswordField passwordField;
     public AnchorPane loginPanel;
-    public VBox mainPanel;
+    public AnchorPane mainPanel;
     public Label labelUserLogin;
     public AnchorPane registerPanel;
     public TextField regNameField;
@@ -49,11 +41,11 @@ public class Controller implements Initializable {
     public PasswordField regPasswordField;
     public PasswordField regRepeatPasswordField;
     public Label labelUserNotFound;
-    public TableView<FileInfo> clientFiles;
     private byte[] buffer;
     public Socket socket;
     public ObjectEncoderOutputStream os;
     public ObjectDecoderInputStream in;
+    public ListView<String> clientFiles;
     public ListView<String> serverFiles;
     private Path baseDir;
 
@@ -82,8 +74,7 @@ public class Controller implements Initializable {
                             if (userAuth.getStatus()) {
                                 loginPanel.setVisible(false);
                                 mainPanel.setVisible(true);
-                                String text = "Hello, " + userAuth.getLogin();
-                                Platform.runLater(() -> printLabelUserLogin(text));
+                                Platform.runLater(() ->labelUserLogin.setText("Hello, " + userAuth.getLogin()));
                                 showClientFiles();
                             } else {
                                 Platform.runLater(() -> labelUserNotFound.setText("User not found, please sign up"));
@@ -94,8 +85,7 @@ public class Controller implements Initializable {
                             UserRegister userRegister = (UserRegister) msg;
                             registerPanel.setVisible(false);
                             mainPanel.setVisible(true);
-                            String text = "Hello, " + userRegister.getLogin();
-                            Platform.runLater(() -> printLabelUserLogin(text));
+                            Platform.runLater(() ->labelUserLogin.setText("Hello, " + userRegister.getLogin()));
                             showClientFiles();
                             break;
                     }
@@ -108,67 +98,22 @@ public class Controller implements Initializable {
         t.start();
     }
 
-    private void printLabelUserLogin(String text) {
-        labelUserLogin.setText(text);
-        labelUserLogin.setTextAlignment(TextAlignment.CENTER);
-    }
-
     private void fillServerView(List<String> list) {
         serverFiles.getItems().clear();
         serverFiles.getItems().addAll(list);
     }
 
-    private void fillClientView(List<FileInfo> list) {
+    private void fillClientView(List<String> list) {
         clientFiles.getItems().clear();
         clientFiles.getItems().addAll(list);
     }
 
+
+
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        TableColumn<FileInfo, Boolean> columnImage = new TableColumn<>();
-        columnImage.setCellValueFactory(data -> new SimpleBooleanProperty(data.getValue().isDirectory()));
-        columnImage.setPrefWidth(40);
-        columnImage.setCellFactory(tc -> new TableCell<FileInfo, Boolean>() {
-            @Override
-            public void updateItem(Boolean isDirectory, boolean empty){
-                super.updateItem(isDirectory, empty);
-                if (isDirectory != null){
-                    ImageView imgView = new ImageView();
-                    if (isDirectory) {
-                        imgView.setImage(new Image(getClass().getResourceAsStream("/folder.png")));
-                        imgView.setFitHeight(30);
-                        imgView.setFitWidth(30);
-                    }else{
-                        imgView.setImage(new Image(getClass().getResourceAsStream("/document.png")));
-                        imgView.setFitHeight(30);
-                        imgView.setFitWidth(30);
-                    }
-                    setGraphic(imgView);
-                }else {
-                    setGraphic(null);
-                }
-            }
-        });
-        clientFiles.getColumns().add(columnImage);
-
-        TableColumn<FileInfo, String> columnName = new TableColumn<>();
-        columnName.setPrefWidth(150);
-        columnName.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getFileName()));
-        columnName.setCellFactory(tc -> new TableCell<FileInfo, String>(){
-            @Override
-            public void updateItem(String fileName, boolean empty){
-                if (fileName != null && !empty) {
-                    setText(fileName);
-                }
-                else {
-                    setText("");
-                }
-            }
-        });
-        clientFiles.getColumns().add(columnName);
-        showClientFiles();
     }
-
 
     private void connect() {
         try {
@@ -185,11 +130,10 @@ public class Controller implements Initializable {
     private void showClientFiles() {
         baseDir = Paths.get(System.getProperty("user.home"));
         clientFiles.getItems().addAll(getFileNames());
-        //System.out.println("Hello!!!!");
         clientFiles.setOnMouseClicked(e -> {
             if (e.getClickCount() == 2) {
-                FileInfo file = clientFiles.getSelectionModel().getSelectedItem();
-                Path path = baseDir.resolve(file.getFileName());
+                String file = clientFiles.getSelectionModel().getSelectedItem();
+                Path path = baseDir.resolve(file);
                 if (Files.isDirectory(path)) {
                     baseDir = path;
                     fillClientView(getFileNames());
@@ -199,10 +143,10 @@ public class Controller implements Initializable {
     }
 
 
-    private List<FileInfo> getFileNames()  {
+    private List<String> getFileNames()  {
         try {
             return Files.list(baseDir)
-                    .map(FileInfo::new)
+                    .map(p -> p.getFileName().toString())
                     .collect(Collectors.toList());
         } catch (Exception e) {
             return new ArrayList<>();
@@ -210,8 +154,8 @@ public class Controller implements Initializable {
     }
 
     public void upload(ActionEvent actionEvent) throws IOException {
-        FileInfo file = clientFiles.getSelectionModel().getSelectedItem();
-        Path filePath = baseDir.resolve(file.getFileName());
+        String file = clientFiles.getSelectionModel().getSelectedItem();
+        Path filePath = baseDir.resolve(file);
         System.out.println(filePath.toString());
         os.writeObject(new FileMessage(filePath));
     }

@@ -17,7 +17,6 @@ public class App extends Application {
         Parent parent = loader.load();
 
         Scene scene = new Scene(parent);
-        scene.getStylesheets().add("/style.css");
         primaryStage.setScene(scene);
 
         primaryStage.setTitle("Cloud storage");
