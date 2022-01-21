@@ -52,14 +52,14 @@ public class NetworkService {
                                     MainController.baseDir.resolve(fileMessage.getFileName()),
                                     fileMessage.getBytes()
                             );
-                            Platform.runLater(() -> mainController.fillClientView(mainController.getClientFileNames()));
+                            Platform.runLater(() -> mainController.fillView(mainController.clientFiles, mainController.getClientFileNames()));
                             break;
                         case FILE_REQUEST:
                             break;
                         case FILES_LIST:
                             FilesList files = (FilesList) msg;
                             mainController.setServerFilesList(files.getFiles());
-                            Platform.runLater(() -> mainController.fillServerView(mainController.getServerFileNames()));
+                            Platform.runLater(() -> mainController.fillView(mainController.serverFiles, mainController.getServerFileNames()));
                             break;
                         case USER_AUTH:
                             UserAuth userAuth = (UserAuth) msg;

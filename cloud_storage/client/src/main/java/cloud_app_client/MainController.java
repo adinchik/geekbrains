@@ -44,14 +44,9 @@ public class MainController implements Initializable {
         this.serverFilesList = new ArrayList<>();
     }
 
-    public void fillServerView(List<FileInfo> list) {
-        serverFiles.getItems().clear();
-        serverFiles.getItems().addAll(list);
-    }
-
-    public void fillClientView(List<FileInfo> list) {
-        clientFiles.getItems().clear();
-        clientFiles.getItems().addAll(list);
+    public void fillView(TableView<FileInfo> tableView, List<FileInfo> list) {
+        tableView.getItems().clear();
+        tableView.getItems().addAll(list);
     }
 
     public void setServerFilesList(List<File> list) {
@@ -73,7 +68,7 @@ public class MainController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         addColumnsToTableView(serverFiles);
-        fillServerView(getServerFileNames());
+        fillView(serverFiles, getServerFileNames());
         addColumnsToTableView(clientFiles);
         showClientFiles();
     }
@@ -169,7 +164,7 @@ public class MainController implements Initializable {
                 if (Files.isDirectory(path)) {
                     parentPaths.push(baseDir);
                     baseDir = path;
-                    fillClientView(getClientFileNames());
+                    fillView(clientFiles, getClientFileNames());
                 }
             }
         });
@@ -203,7 +198,7 @@ public class MainController implements Initializable {
         if (!parentPaths.empty()) {
             baseDir = parentPaths.peek();
             parentPaths.pop();
-            fillClientView(getClientFileNames());
+            fillView(clientFiles, getClientFileNames());
         }
     }
 }

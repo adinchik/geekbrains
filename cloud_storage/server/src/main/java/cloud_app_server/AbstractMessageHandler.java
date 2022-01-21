@@ -4,21 +4,16 @@ import auth.AuthService;
 import auth.User;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
-import lombok.extern.slf4j.Slf4j;
 import model.*;
 
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class AbstractMessageHandler extends SimpleChannelInboundHandler<AbstractMessage> {
     private User user;
-    private AuthService authService;
 
     public AbstractMessageHandler()
     {
         user = null;
-        authService = new AuthService();
     }
 
     @Override
@@ -47,18 +42,19 @@ public class AbstractMessageHandler extends SimpleChannelInboundHandler<Abstract
                 break;
             case USER_AUTH:
                 UserAuth userAuth = (UserAuth) message;
-                userAuth.setStatus(authService.isUserExist(userAuth));
+                userAuth.setStatus(Server.authService.isUserExist(userAuth));
                 ctx.writeAndFlush(userAuth);
                 if (userAuth.getStatus()) {
+                    user = Server.authService.getUserByLoginAndPassword(userAuth);
                     ctx.writeAndFlush(new FilesList(user.getPath()));
-                    user = authService.getUserByLoginAndPassword(userAuth);
                 }
+                break;
             case USER_REGISTER:
                 UserRegister userRegister = (UserRegister) message;
-                user = authService.createNewUser(userRegister);
+                user = Server.authService.createNewUser(userRegister);
                 ctx.writeAndFlush(userRegister);
                 ctx.writeAndFlush(new FilesList(user.getPath()));
-
+                break;
         }
     }
 }
