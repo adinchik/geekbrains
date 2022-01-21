@@ -1,0 +1,13 @@
+show dbs
+use test
+show collections
+db.docs.find()
+db.docs.find({"borough:Brooklyn"}, {"name":1})
+db.docs.find({"borough:Brooklyn"}, {"name":1, "id":0})
+db.docs.find({"borough:Brooklyn"},{"name":1, "id":0})
+db.docs.find({"address.street":"Nostrand Avenue","cuisine":"Caribbean"},{restaurant_id:1, _id:0});
+db.docs.find({"borough":"Brooklyn"},{name:1, _id:0});
+show dbs
+use test
+db.docs.find({"borough":"Brooklyn"},{name:1})
+db.docs.find({"borough":"Brooklyn"},{name:1, _id:0})
