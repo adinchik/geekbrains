@@ -4,7 +4,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="332.0" prefWidth="482.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cloud_app_client.RegisterController">
+<AnchorPane prefHeight="332.0" prefWidth="482.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.geekbrains.cloud_app_client.RegisterController">
 
         <children>
             <Label layoutX="152.0" layoutY="44.0" text="New user registration">

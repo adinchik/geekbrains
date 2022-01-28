@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="444.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cloud_app_client.MainController">
+<AnchorPane prefHeight="444.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.geekbrains.cloud_app_client.MainController">
   <VBox fx:id="mainPanel" prefHeight="418.0" prefWidth="807.0">
     <children>
       <MenuBar prefHeight="14.0" prefWidth="800.0" VBox.vgrow="NEVER">
