@@ -2,12 +2,9 @@ package auth;
 
 import cloud_app_server.Server;
 import lombok.Data;
-import model.UserAuth;
 import model.UserRegister;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -20,6 +17,13 @@ public class User {
     Path path;
 
 
+    public User(String login, String name, String password, String path) {
+        this.login = login;
+        this.password = password;
+        this.name = name;
+        this.path = Paths.get(path);
+
+    }
     public User(UserRegister userRegister) {
         this.login = userRegister.getLogin();
         this.password = userRegister.getPassword();

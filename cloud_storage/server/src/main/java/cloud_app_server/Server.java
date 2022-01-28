@@ -1,5 +1,6 @@
 package cloud_app_server;
 
+import auth.AuthService;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -10,14 +11,12 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
-
 public class Server {
     public static final Logger log = LogManager.getLogger(Server.class);
+    public static AuthService authService;
 
     public static void main(String[] args) {
+        authService = new AuthService();
         HandlerProvider provider = new HandlerProvider();
         EventLoopGroup auth = new NioEventLoopGroup(1);
         EventLoopGroup worker = new NioEventLoopGroup();
@@ -41,6 +40,7 @@ public class Server {
         } finally {
             auth.shutdownGracefully();
             worker.shutdownGracefully();
+            authService.stop();
         }
     }
 }
